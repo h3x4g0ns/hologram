@@ -83,17 +83,18 @@ final class CoordinatorPointCloud: MTKCoordinator {
         translationOrig.columns.3 = [0, 0, +0, 1]
         
         if currentCameraMode == .quarterArc {
-            // Limit camera rotation to a quarter arc, to and fro, while aimed
-            // at the center.
-            if staticAngle <= 0 {
-                 staticInc = -staticInc
-             }
-             if staticAngle > 1.2 {
-                 staticInc = -staticInc
-             }
-        }
-        
-        staticAngle += staticInc
+//            // Limit camera rotation to a quarter arc, to and fro, while aimed
+//            // at the center.
+//            if staticAngle <= 0 {
+//                 staticInc = -staticInc
+//             }
+//             if staticAngle > 1.2 {
+//                 staticInc = -staticInc
+//             }
+//        }
+//        
+//        staticAngle += staticInc
+        staticAngle = 0
 
         let sinf = sin(staticAngle)
         let cosf = cos(staticAngle)
@@ -111,12 +112,14 @@ final class CoordinatorPointCloud: MTKCoordinator {
         case .quarterArc:
             // Rotate the point cloud 1/4 arc.
             translationCamera.columns.3 = [0, -1500 * sinf, -1500 * scaleMovement * sinf, 1]
-            cameraRotation = simd_quatf(angle: staticAngle, axis: SIMD3(x: -1, y: 0, z: 0))
+//            cameraRotation = simd_quatf(angle: staticAngle, axis: SIMD3(x: -1, y: 0, z: 0))
+            cameraRotation = simd_quatf(ix: 0, iy: 0, iz: 0, r: 1)
         case .sidewaysMovement:
             // Randomize the camera scale.
             translationCamera.columns.3 = [150 * sinf, -150 * cossqr, -150 * scaleMovement * sinsqr, 1]
             // Randomize the camera movement.
-            cameraRotation = simd_quatf(angle: staticAngle, axis: SIMD3(x: -sinsqr / 3, y: -cossqr / 3, z: 0))
+//            cameraRotation = simd_quatf(angle: staticAngle, axis: SIMD3(x: -sinsqr / 3, y: -cossqr / 3, z: 0))
+            cameraRotation = simd_quatf(ix: 0, iy: 0, iz: 0, r: 1)
         }
         let rotationMatrix: matrix_float4x4 = matrix_float4x4(cameraRotation)
         let pmv = projection * rotationMatrix * translationCamera * translationOrig * orientationOrig
